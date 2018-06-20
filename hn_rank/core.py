@@ -1,4 +1,4 @@
-import requests, json, operator
+import requests, json, operator, sys
 from datetime import datetime
 
 
@@ -19,6 +19,7 @@ def rank_urls(urls, year=None, filename=None):
 			pass
 
 	leaderboard = {}
+	count = 0
 
 	for url in urls:
 		query = 'http://hn.algolia.com/api/v1/search?query=' + url + '&restrictSearchableAttributes=url'
@@ -37,6 +38,11 @@ def rank_urls(urls, year=None, filename=None):
 				pass
 			else:
 				total_score += item['points']
+
+		count += 1
+		progress = (count / len(urls) ) * 100.00
+		sys.stdout.write(" Progress: %d%%   \r" % (progress) )
+		sys.stdout.flush()
 
 		leaderboard[url] = total_score
 	sorted_leaderboard = reversed(sorted(leaderboard.items(), key=operator.itemgetter(1)))
@@ -69,6 +75,7 @@ def rank_articles(urls, year=None, filename=None):
 			pass
 		
 	articles = {}
+	count = 0
 
 	for url in urls:
 		query = 'http://hn.algolia.com/api/v1/search?query=' + url + '&restrictSearchableAttributes=url'
@@ -85,6 +92,10 @@ def rank_articles(urls, year=None, filename=None):
 				pass
 			else:
 				articles[link] = points
+		count += 1
+		progress = (count / len(urls) ) * 100.00
+		sys.stdout.write(" Progress: %d%%   \r" % (progress) )
+		sys.stdout.flush()
 
 	sorted_articles = reversed(sorted(articles.items(), key=operator.itemgetter(1)))
 
