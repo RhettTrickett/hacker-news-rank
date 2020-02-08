@@ -1,4 +1,4 @@
-import requests, json, operator, sys
+import requests, json, operator, sys, time
 from datetime import datetime
 
 
@@ -46,6 +46,7 @@ def rank_urls(urls, year=None, filename=None):
 		sys.stdout.flush()
 
 		leaderboard[url] = total_score
+		time.sleep(1) # Limit to 1 api request per second
 	sorted_leaderboard = reversed(sorted(leaderboard.items(), key=operator.itemgetter(1)))
 
 	if filename:
@@ -97,6 +98,7 @@ def rank_articles(urls, year=None, filename=None):
 		progress = (count / len(urls) ) * 100.00
 		sys.stdout.write(" Progress: %d%%   \r" % (progress) )
 		sys.stdout.flush()
+		time.sleep(1) # Limit to 1 api request per second
 
 	sorted_articles = reversed(sorted(articles.items(), key=operator.itemgetter(1)))
 
